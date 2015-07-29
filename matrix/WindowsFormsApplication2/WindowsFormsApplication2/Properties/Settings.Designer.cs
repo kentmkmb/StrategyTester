@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EurobotStrategyCreator.Properties {
+namespace StrategyTester.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

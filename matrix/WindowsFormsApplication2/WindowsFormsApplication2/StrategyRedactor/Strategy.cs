@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EurobotStrategyCreator
+namespace StrategyTester
 {
     public class Strategy : IStrategy
     {
         public State First;
         private State current;
         private State last;
+        private List<State> history;
+        private ITranslator translator;
 
-        public Strategy()
+        public Strategy(ITranslator translator)
         {
-            First = null;
-            current = null;
-            last = null;
+            this.First = null;
+            this.current = null;
+            this.last = null;
+            this.history = new List<State>();
+            this.translator = translator;
         }
+        public Strategy() : this(null) { }
 
         public Strategy StopAt(int x, int y, double angle)
         {
@@ -88,10 +90,22 @@ namespace EurobotStrategyCreator
                 return new EndOfStrategy();
             }   
         }
-        public State GetNextState(Report report)
+        public Tuple<List<LowLevelCommand>, State> GetNextState(Report report)
         {
             State decision = MakeDecision(report);
-            return decision;
+            history.Add(decision);
+            var translation = decision.GetTranslation(translator, report);
+            return new Tuple<List<LowLevelCommand>, State>(translation, decision);
+        }
+
+        public void GoToPreviousState(int number)
+        {
+            for (int i = 0; i < number; i++)
+            {
+                if (history.Count == 0) return;
+                current = history[history.Count - 1];
+                history.RemoveAt(history.Count - 1);
+            }
         }
     }
 }

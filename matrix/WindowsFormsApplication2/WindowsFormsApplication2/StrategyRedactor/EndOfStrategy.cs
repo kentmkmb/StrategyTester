@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace EurobotStrategyCreator
+namespace StrategyTester
 {
     public class EndOfStrategy : State
     {
@@ -17,6 +13,10 @@ namespace EurobotStrategyCreator
         public override string ToString()
         {
             return "End";
+        }
+        public override List<LowLevelCommand> GetTranslation(ITranslator translator, Report current)
+        {
+            return translator.Translate(current, this);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EurobotStrategyCreator
+namespace StrategyTester
 {
     class World
     {

@@ -1,4 +1,4 @@
-﻿namespace EurobotStrategyCreator
+﻿namespace StrategyTester
 {
     partial class Form1
     {

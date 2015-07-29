@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EurobotStrategyCreator
+namespace StrategyTester
 {
     public class StoppingAt : State
     {
@@ -23,6 +20,10 @@ namespace EurobotStrategyCreator
         public override string ToString()
         {
             return String.Format("StopAt({0}, {1}, {2})", Coords.X, Coords.Y, AngleInRadians);
+        }
+        public override List<LowLevelCommand> GetTranslation(ITranslator translator, Report current)
+        {
+            return translator.Translate(current, this);
         }
     }
 }
