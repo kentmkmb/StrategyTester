@@ -6,10 +6,10 @@ namespace StrategyTester
 {
     public class StoppingAt : State
     {
-        public Point Coords;
+        public MyPoint Coords;
         public double AngleInRadians;
 
-        public StoppingAt(double angle, Point coords)
+        public StoppingAt(double angle, MyPoint coords)
         {
             AngleInRadians = angle;
             Coords = coords;

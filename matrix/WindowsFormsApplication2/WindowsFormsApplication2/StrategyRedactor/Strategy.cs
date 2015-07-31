@@ -24,13 +24,13 @@ namespace StrategyTester
 
         public Strategy StopAt(int x, int y, double angle)
         {
-            var newItem = new StoppingAt(angle, new Point(x, y));
+            var newItem = new StoppingAt(angle, new MyPoint(x, y));
             Connect(newItem);
             return this;
         }
         public Strategy MoveTo(int x, int y)
         {
-            var newItem = new MovementTo(new Point(x, y));
+            var newItem = new MovementTo(new MyPoint(x, y));
             Connect(newItem);
             return this;
         }

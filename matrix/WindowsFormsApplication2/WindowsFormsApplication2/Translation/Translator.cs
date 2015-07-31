@@ -61,7 +61,7 @@ namespace StrategyTester
             var delta = CalculateAngleDelta(currentAngle, targetAngle);
             return new Rotate(Math.Sign(delta) * speed, Math.Abs(delta) / speed);
         }
-        private Forward MakeForward(Point current, Point target)
+        private Forward MakeForward(MyPoint current, MyPoint target)
         {
             var speed = LinearSpeedСoefficient * robotInfo.MaxLinearSpeed;
             var length = Math.Sqrt(Math.Pow(target.X - current.X, 2) + Math.Pow(target.Y - current.Y, 2));

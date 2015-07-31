@@ -9,7 +9,7 @@ namespace StrategyTester
 {
     public class Report
     {
-        public Point Coords;
+        public MyPoint Coords;
         private double angleInRadians;
         public double AngleInRadians
         {
@@ -20,7 +20,7 @@ namespace StrategyTester
                 {
                     value += 2 * Math.PI;
                 }
-                while (value >= 2*Math.PI)
+                while (value >= 2 * Math.PI)
                 {
                     value -= 2 * Math.PI;
                 }
@@ -29,7 +29,7 @@ namespace StrategyTester
         }
         public bool Success;
 
-        public Report(double angle, Point coords, bool success)
+        public Report(double angle, MyPoint coords, bool success)
         {
             AngleInRadians = angle;
             Coords = coords;

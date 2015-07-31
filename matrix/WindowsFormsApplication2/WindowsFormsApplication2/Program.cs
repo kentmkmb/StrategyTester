@@ -9,7 +9,7 @@ namespace StrategyTester
         [STAThread]
         static void Main()
         {
-            var config = new Config(30, 45);
+            var config = new Config(70, Math.PI / 2);
             var planB = new Strategy()
                 .MoveTo(300, 300)
                 .MoveTo(400, 400)
@@ -25,7 +25,8 @@ namespace StrategyTester
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(strategy, new Report(0, new Point(20, 20), true)));
+            //Application.Run(new StraregyVisualizer(strategy));
+            //Application.Run(new StrategySimulator(strategy, new Report(0, new MyPoint(20, 20), true)));
         }
     }
 }

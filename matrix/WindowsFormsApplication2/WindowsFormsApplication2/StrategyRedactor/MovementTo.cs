@@ -6,8 +6,8 @@ namespace StrategyTester
 {
     public class MovementTo : State
     {
-        public Point Coords;
-        public MovementTo(Point coords)
+        public MyPoint Coords;
+        public MovementTo(MyPoint coords)
         {
             Coords = coords;
             this.Next = null;

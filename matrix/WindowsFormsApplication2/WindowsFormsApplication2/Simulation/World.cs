@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace StrategyTester
 {
@@ -10,45 +11,94 @@ namespace StrategyTester
     {
         public List<MyObject> Objects;
         public Robot OurRobot;
-        public Robot Opponent;
+        const double angleDelta = Math.PI / 50;
+        const int coordsDelta = 4;
         public bool Moving { get; private set; }
 
-        public World(Point robotCoords, double robotAngle)
+        public World(MyPoint robotCoords, double robotAngle)
         {
             Moving = false;
             Objects = new List<MyObject>();
             OurRobot = new Robot(robotCoords, robotAngle);
         }
 
-        private Report Move(Report currentState, Report desiredState)
+        bool Forward(Report originalState, Forward command)
         {
-            const double angleDelta = Math.PI / 50;
-            const int coordsDelta = 4;
             Moving = true;
-            while (Math.Abs(OurRobot.Angle - desiredState.AngleInRadians) > angleDelta)
+            var isMoveSuccessfull = true;
+            var timeDelta = command.Time / 100;
+            var targetCoords = new MyPoint(OurRobot.Coords.X + command.Time * command.Speed * Math.Cos(OurRobot.Angle),
+                                           OurRobot.Coords.Y + command.Time * command.Speed * Math.Sin(OurRobot.Angle));
+            for (var i = 0.0; i < command.Time - timeDelta; i+=timeDelta)
             {
-                if (OurRobot.Angle < desiredState.AngleInRadians) OurRobot.Angle += angleDelta;
-                else OurRobot.Angle -= angleDelta;
-                Thread.Sleep(25);
+                OurRobot.Coords.X += timeDelta * command.Speed * Math.Cos(OurRobot.Angle);
+                OurRobot.Coords.Y += timeDelta * command.Speed * Math.Sin(OurRobot.Angle);
+                if (Objects.Any(x => x.IsPointIn(OurRobot.Coords)))
+                {
+                    OurRobot.Angle = originalState.AngleInRadians;
+                    OurRobot.Coords = originalState.Coords;
+                    isMoveSuccessfull = false;
+                    break;
+                }
+                Thread.Sleep((int)(timeDelta * 1000));
             }
-            OurRobot.Angle = desiredState.AngleInRadians;
-            while (Math.Abs(OurRobot.Coords.X - desiredState.Coords.X) > Math.Abs(coordsDelta * Math.Cos(OurRobot.Angle)) ||
-                  Math.Abs(OurRobot.Coords.Y - desiredState.Coords.Y) > Math.Abs(coordsDelta * Math.Sin(OurRobot.Angle)))
-            {
-                if (OurRobot.Coords.X < desiredState.Coords.X) OurRobot.Coords.X += (int)Math.Floor(Math.Abs(coordsDelta * Math.Cos(OurRobot.Angle)));
-                else OurRobot.Coords.X -= (int)Math.Floor(Math.Abs(coordsDelta * Math.Cos(OurRobot.Angle)));
-                if (OurRobot.Coords.Y < desiredState.Coords.Y) OurRobot.Coords.Y += (int)Math.Floor(Math.Abs(coordsDelta * Math.Sin(OurRobot.Angle)));
-                else OurRobot.Coords.Y -= (int)Math.Floor(Math.Abs(coordsDelta * Math.Sin(OurRobot.Angle)));
-                Thread.Sleep(25);
-            }
-            OurRobot.Coords = desiredState.Coords;
+            if (isMoveSuccessfull)
+                OurRobot.Coords = targetCoords;
             Moving = false;
-            return new Report(OurRobot.Angle, OurRobot.Coords, true);
+            return isMoveSuccessfull;
         }
 
-        public Task<Report> TryMove(Report currentState, Report desiredState)
+        bool Rotate(Report originalState, Rotate command)
         {
-            var task = new Task<Report>(() => { return Move(currentState, desiredState); });
+            Moving = true;
+            bool isMoveSuccessfull = true;
+            var targetAngle = OurRobot.Angle + command.AngleSpeed * command.Time;
+            var timeDelta = command.Time / 100;
+            for (var i = 0.0; i < command.Time - timeDelta; i += timeDelta)
+            {
+                OurRobot.Angle += timeDelta * command.AngleSpeed;
+                Thread.Sleep((int)(timeDelta * 1000));
+            }
+            OurRobot.Angle = targetAngle;
+            Moving = false;
+            return isMoveSuccessfull;
+        }
+
+        bool Nothing(Report originalState, Nothing command)
+        {
+            return true;
+        }
+
+        public Report MakeMoves(Report originalState, List<LowLevelCommand> movesList)
+        {
+            bool isSuccess = true;
+            foreach (var move in movesList)
+            {
+                var type = move.GetType().Name;
+                isSuccess = (bool)this
+                    .GetType()
+                    .GetMethod(type, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .Invoke(this, new object[] { originalState, move });
+                if (!isSuccess)
+                {
+                    OurRobot.Angle = originalState.AngleInRadians;
+                    OurRobot.Coords = originalState.Coords;
+                    break;
+                }
+            }
+            var resultingState = new Report(OurRobot.Angle, OurRobot.Coords, isSuccess);
+            return resultingState;
+        }
+
+        public void SetState(Report state)
+        {
+            OurRobot.Angle = state.AngleInRadians;
+            OurRobot.Coords = state.Coords;
+        }
+
+        public Task<Report> TryMove(Report currentState, List<LowLevelCommand> movesList)
+        {
+            var task = new Task<Report>(() => { return MakeMoves(currentState, movesList); });
             task.Start();
             return task;
         }

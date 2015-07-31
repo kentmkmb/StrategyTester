@@ -9,14 +9,24 @@ namespace StrategyTester
     class MyObject
     {
         public Point Coords;
-        public double Height;
-        public double Width;
+        public Size Size;
 
-        public MyObject(Point coords, double height, double width)
+        public MyObject(Point coords, Size size)
         {
             Coords = coords;
-            Height = height;
-            Width = width;
+            Size = size;
+        }
+
+        public bool IsPointIn(Point point)
+        {
+            return point.X > Coords.X && point.X < Coords.X + Size.Width &&
+                   point.Y > Coords.Y && point.Y < Coords.Y + Size.Height;
+        }
+
+        public bool IsPointIn(MyPoint point)
+        {
+            return point.X > Coords.X && point.X < Coords.X + Size.Width &&
+                   point.Y > Coords.Y && point.Y < Coords.Y + Size.Height;
         }
     }
 }
