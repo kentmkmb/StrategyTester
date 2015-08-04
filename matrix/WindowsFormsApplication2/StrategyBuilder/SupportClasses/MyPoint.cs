@@ -17,11 +17,5 @@ namespace StrategyTester
             X = x;
             Y = y;
         }
-
-        public MyPoint(Point p)
-        {
-            X = p.X;
-            Y = p.Y;
-        }
     }
 }

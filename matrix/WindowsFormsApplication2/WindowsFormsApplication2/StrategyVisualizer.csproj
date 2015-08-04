@@ -56,37 +56,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Simulation\MyPoint.cs" />
-    <Compile Include="StrategyVisualization.cs">
+    <Compile Include="Graph.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SupportClasses\Config.cs" />
-    <Compile Include="Translation\Forward.cs" />
-    <Compile Include="Interfaces\ITranslator.cs" />
-    <Compile Include="SupportClasses\AngleCaculator.cs" />
-    <Compile Include="Translation\LowLevelCommand.cs" />
-    <Compile Include="Translation\Nothing.cs" />
-    <Compile Include="Translation\Rotate.cs" />
-    <Compile Include="Translation\Translator.cs" />
-    <Compile Include="Trash\TranslatorToReport.cs" />
-    <Compile Include="Trash\Builder.cs" />
-    <Compile Include="Simulation\SimulationForm.cs" />
-    <Compile Include="Simulation\SimulationForm.Designer.cs">
+    <Compile Include="SimulationForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SimulationForm.Designer.cs">
       <DependentUpon>SimulationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="StrategyRedactor\EndOfStrategy.cs" />
-    <Compile Include="Interfaces\IStrategy.cs" />
-    <Compile Include="StrategyRedactor\StoppingAt.cs" />
-    <Compile Include="StrategyRedactor\MovementTo.cs" />
     <Compile Include="Simulation\MyObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Simulation\Report.cs" />
     <Compile Include="Simulation\Robot.cs" />
-    <Compile Include="StrategyRedactor\State.cs" />
-    <Compile Include="Trash\Class1.cs" />
-    <Compile Include="Trash\OldStrategy.cs" />
-    <Compile Include="StrategyRedactor\Strategy.cs" />
     <Compile Include="Simulation\World.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -112,7 +94,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\StrategyBuilder\StrategyBuilder.csproj">
+      <Project>{9a29b69a-4c80-468e-9bc2-6e0d0be38d40}</Project>
+      <Name>StrategyBuilder</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
