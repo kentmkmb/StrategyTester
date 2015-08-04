@@ -56,17 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graph.cs">
-      <SubType>Form</SubType>
+    <Compile Include="GraphPanel.cs">
+      <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulationForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SimulationForm.Designer.cs">
       <DependentUpon>SimulationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulation\MyObject.cs" />
     <Compile Include="Simulation\Robot.cs" />
     <Compile Include="Simulation\World.cs" />

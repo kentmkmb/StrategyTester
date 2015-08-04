@@ -6,7 +6,7 @@ namespace StrategyBuilder
 {
     public class Strategy : IStrategy
     {
-        public State First;
+        public State First { get; set; }
         private State current;
         private State last;
         private List<State> history;

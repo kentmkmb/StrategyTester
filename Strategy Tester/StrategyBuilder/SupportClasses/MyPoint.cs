@@ -17,5 +17,10 @@ namespace StrategyBuilder
             X = x;
             Y = y;
         }
+
+        public override string ToString()
+        {
+            return String.Format("Point({0}, {1})", X, Y);
+        }
     }
 }

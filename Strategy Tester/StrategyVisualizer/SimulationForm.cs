@@ -32,6 +32,7 @@ namespace StrategyVisualizer
         bool mouseDown;
         Bitmap map;
         SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
+        GraphPanel graphPanel;
 
         public StrategySimulator(IStrategy strategy, Report start)
         {
@@ -39,9 +40,11 @@ namespace StrategyVisualizer
             environment = new World(start.Coords, start.AngleInRadians);
             currentState = start;
             moveHistory = new List<Move>();
-            stateHistory = new List<Report>();
-            Width = 800;
+            stateHistory = new List<Report> { start };
+            graphPanel = new GraphPanel(start, strategy);
+            Width = 800 + graphPanel.Width;
             Height = 600;
+            graphPanel.Location = new Point(800, 0);
             DoubleBuffered = true;
             var sw = new Timer();
             var loadMap = new Button
@@ -54,7 +57,7 @@ namespace StrategyVisualizer
             var picturePanel = new Canvas
             {
                 Height = 530,
-                Width = Width - 150
+                Width = Width - 150 - graphPanel.Width
             };
             var nextBut = new Button
             {
@@ -74,7 +77,7 @@ namespace StrategyVisualizer
             {
                 Height = 560,
                 Width = 150,
-                Location = new Point(Width - 150, 0),
+                Location = new Point(Width - 150 - graphPanel.Width, 0),
                 View = View.List,
                 MultiSelect = false
             };
@@ -94,6 +97,7 @@ namespace StrategyVisualizer
             Controls.Add(nextBut);
             Controls.Add(prevBut);
             Controls.Add(loadMap);
+            Controls.Add(graphPanel);
             sw.Start();
         }
 
@@ -114,8 +118,6 @@ namespace StrategyVisualizer
             if (fDialog.FileName == "") return;
             var img = Image.FromFile(fDialog.FileName);
             map = new Bitmap(img, img.Width, img.Height);
-            Height = img.Height + 30;
-            Width = img.Width + 150;
         }
 
         void PicturePanel_MouseMove(object sender, MouseEventArgs e)
@@ -172,6 +174,7 @@ namespace StrategyVisualizer
 
         void PrevBut_Click(object sender, EventArgs e)
         {
+            if (history.Items.Count == 0) return;
             history.Items.RemoveAt(history.Items.Count - 1);
             moveHistory.RemoveAt(moveHistory.Count - 1);
             stateHistory.RemoveAt(stateHistory.Count - 1);

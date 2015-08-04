@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using StrategyBuilder;
+using System.Windows.Forms;
 
 namespace StrategyVisualizer
 {
-    public partial class StraregyVisualizer : Form
+    public partial class GraphPanel : UserControl
     {
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
         Microsoft.Msagl.Drawing.Graph graph;
-        Strategy strategy;
+        IStrategy strategy;
 
-        public StraregyVisualizer(Strategy strategy)
+        public GraphPanel(Report start, IStrategy strategy)
         {
             viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
             graph = new Microsoft.Msagl.Drawing.Graph("graph");
             var currentState = strategy.First;
+            graph.AddEdge(start.GetHashCode().ToString(), currentState.GetHashCode().ToString());
+            var startNode = graph.FindNode(start.GetHashCode().ToString());
+            startNode.LabelText = start.Coords.ToString();
+            startNode.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Box;
             graph.AddNodes(currentState);
             viewer.ToolBarIsVisible = false;
             viewer.Graph = graph;
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            var magnificationCoeff = 560.0 / viewer.Height;
+            Height = 560;
+            Width = (int)(viewer.Width * magnificationCoeff);
             Controls.Add(viewer);
         }
 
@@ -35,6 +39,16 @@ namespace StrategyVisualizer
         }
 
         public void UnselectNode(State state)
+        {
+
+        }
+
+        public void SelectEdge(State from, State to)
+        {
+
+        }
+
+        public void UnselectEdge(State from, State to)
         {
 
         }
