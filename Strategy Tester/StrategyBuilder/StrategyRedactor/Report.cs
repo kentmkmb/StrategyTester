@@ -9,7 +9,7 @@ namespace StrategyBuilder
 {
     public class Report
     {
-        public MyPoint Coords;
+        public PointD Coords;
         private double angleInRadians;
         public double AngleInRadians
         {
@@ -29,7 +29,7 @@ namespace StrategyBuilder
         }
         public bool Success;
 
-        public Report(double angle, MyPoint coords, bool success)
+        public Report(double angle, PointD coords, bool success)
         {
             AngleInRadians = angle;
             Coords = coords;

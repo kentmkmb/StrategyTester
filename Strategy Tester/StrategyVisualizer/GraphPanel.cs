@@ -8,22 +8,36 @@ using System.Windows.Forms;
 
 namespace StrategyVisualizer
 {
+    public class Start : State
+    {
+        public PointD Coords;
+
+        public Start(PointD coords)
+        {
+            Coords = coords;
+        }
+
+        public override string ToString()
+        {
+            return Coords.ToString();
+        }
+
+        public override List<LowLevelCommand> GetTranslation(ITranslator translator, Report current)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public partial class GraphPanel : UserControl
     {
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
         Microsoft.Msagl.Drawing.Graph graph;
-        IStrategy strategy;
 
-        public GraphPanel(Report start, IStrategy strategy)
+        public GraphPanel(State start)
         {
             viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
             graph = new Microsoft.Msagl.Drawing.Graph("graph");
-            var currentState = strategy.First;
-            graph.AddEdge(start.GetHashCode().ToString(), currentState.GetHashCode().ToString());
-            var startNode = graph.FindNode(start.GetHashCode().ToString());
-            startNode.LabelText = start.Coords.ToString();
-            startNode.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Box;
-            graph.AddNodes(currentState);
+            graph.AddNodes(start);
             viewer.ToolBarIsVisible = false;
             viewer.Graph = graph;
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;

@@ -9,8 +9,8 @@ namespace StrategyVisualizer
 {
     public class Move
     {
-        public MyPoint From;
-        public MyPoint To;
+        public PointD From;
+        public PointD To;
     }
 
     public class Canvas : UserControl
@@ -34,14 +34,17 @@ namespace StrategyVisualizer
         SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
         GraphPanel graphPanel;
 
-        public StrategySimulator(IStrategy strategy, Report start)
+        public StrategySimulator(IStrategy strategy, PointD startingPoint)
         {
             this.strategy = strategy;
-            environment = new World(start.Coords, start.AngleInRadians);
-            currentState = start;
+            var startReport = new Report(0, startingPoint, true);
+            environment = new World(startReport.Coords, startReport.AngleInRadians);
+            currentState = startReport;
             moveHistory = new List<Move>();
-            stateHistory = new List<Report> { start };
-            graphPanel = new GraphPanel(start, strategy);
+            stateHistory = new List<Report> { startReport };
+            var startState = new Start(startingPoint);
+            startState.Next = strategy.First;
+            graphPanel = new GraphPanel(startState);
             Width = 800 + graphPanel.Width;
             Height = 600;
             graphPanel.Location = new Point(800, 0);
@@ -138,7 +141,7 @@ namespace StrategyVisualizer
         {
             if (e.Button == MouseButtons.Right) return;
             mouseDown = true;
-            environment.Objects.Add(new MyObject(e.Location, new Size(0, 0)));
+            environment.Objects.Add(new Polygon(e.Location, new Size(0, 0)));
         }
 
         void picturePanel_Paint(object sender, PaintEventArgs e)

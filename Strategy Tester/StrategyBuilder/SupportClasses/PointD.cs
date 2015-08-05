@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace StrategyBuilder
 {
-    public struct MyPoint
+    public struct PointD
     {
         public double X;
         public double Y;
 
-        public MyPoint(double x, double y)
+        public PointD(double x, double y)
         {
             X = x;
             Y = y;

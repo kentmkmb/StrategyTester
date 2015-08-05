@@ -50,7 +50,7 @@
     <Compile Include="StrategyRedactor\Strategy.cs" />
     <Compile Include="SupportClasses\AngleCaculator.cs" />
     <Compile Include="SupportClasses\Config.cs" />
-    <Compile Include="SupportClasses\MyPoint.cs" />
+    <Compile Include="SupportClasses\PointD.cs" />
     <Compile Include="Translation\Forward.cs" />
     <Compile Include="Translation\LowLevelCommand.cs" />
     <Compile Include="Translation\Nothing.cs" />

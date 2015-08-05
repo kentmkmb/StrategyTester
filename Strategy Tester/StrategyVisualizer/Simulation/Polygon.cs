@@ -7,12 +7,12 @@ using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
-    class MyObject
+    class Polygon
     {
         public Point Coords;
         public Size Size;
 
-        public MyObject(Point coords, Size size)
+        public Polygon(Point coords, Size size)
         {
             Coords = coords;
             Size = size;
@@ -24,7 +24,7 @@ namespace StrategyVisualizer
                    point.Y > Coords.Y && point.Y < Coords.Y + Size.Height;
         }
 
-        public bool IsPointIn(MyPoint point)
+        public bool IsPointIn(PointD point)
         {
             return point.X > Coords.X && point.X < Coords.X + Size.Width &&
                    point.Y > Coords.Y && point.Y < Coords.Y + Size.Height;

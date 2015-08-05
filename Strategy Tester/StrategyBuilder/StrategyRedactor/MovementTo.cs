@@ -6,8 +6,8 @@ namespace StrategyBuilder
 {
     public class MovementTo : State
     {
-        public MyPoint Coords;
-        public MovementTo(MyPoint coords)
+        public PointD Coords;
+        public MovementTo(PointD coords)
         {
             Coords = coords;
             this.Next = null;

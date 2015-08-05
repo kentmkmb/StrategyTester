@@ -6,10 +6,10 @@ namespace StrategyBuilder
 {
     public class StoppingAt : State
     {
-        public MyPoint Coords;
+        public PointD Coords;
         public double AngleInRadians;
 
-        public StoppingAt(double angle, MyPoint coords)
+        public StoppingAt(double angle, PointD coords)
         {
             AngleInRadians = angle;
             Coords = coords;

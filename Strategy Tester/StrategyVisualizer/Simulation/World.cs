@@ -10,76 +10,30 @@ namespace StrategyVisualizer
 {
     class World
     {
-        public List<MyObject> Objects;
-        public Robot OurRobot;
         const double angleDelta = Math.PI / 50;
         const int coordsDelta = 4;
+        public List<Polygon> Objects { get; private set; }
+        public Robot OurRobot { get; private set; }
         public bool Moving { get; private set; }
 
-        public World(MyPoint robotCoords, double robotAngle)
+        public World(PointD robotCoords, double robotAngle)
         {
             Moving = false;
-            Objects = new List<MyObject>();
+            Objects = new List<Polygon>();
             OurRobot = new Robot(robotCoords, robotAngle);
-        }
-
-        bool Forward(Report originalState, Forward command)
-        {
-            Moving = true;
-            var isMoveSuccessfull = true;
-            var timeDelta = command.Time / 100;
-            var targetCoords = new MyPoint(OurRobot.Coords.X + command.Time * command.Speed * Math.Cos(OurRobot.Angle),
-                                           OurRobot.Coords.Y + command.Time * command.Speed * Math.Sin(OurRobot.Angle));
-            for (var i = 0.0; i < command.Time - timeDelta; i+=timeDelta)
-            {
-                OurRobot.Coords.X += timeDelta * command.Speed * Math.Cos(OurRobot.Angle);
-                OurRobot.Coords.Y += timeDelta * command.Speed * Math.Sin(OurRobot.Angle);
-                if (Objects.Any(x => x.IsPointIn(OurRobot.Coords)))
-                {
-                    OurRobot.Angle = originalState.AngleInRadians;
-                    OurRobot.Coords = originalState.Coords;
-                    isMoveSuccessfull = false;
-                    break;
-                }
-                Thread.Sleep((int)(timeDelta * 1000));
-            }
-            if (isMoveSuccessfull)
-                OurRobot.Coords = targetCoords;
-            Moving = false;
-            return isMoveSuccessfull;
-        }
-
-        bool Rotate(Report originalState, Rotate command)
-        {
-            Moving = true;
-            bool isMoveSuccessfull = true;
-            var targetAngle = OurRobot.Angle + command.AngleSpeed * command.Time;
-            var timeDelta = command.Time / 100;
-            for (var i = 0.0; i < command.Time - timeDelta; i += timeDelta)
-            {
-                OurRobot.Angle += timeDelta * command.AngleSpeed;
-                Thread.Sleep((int)(timeDelta * 1000));
-            }
-            OurRobot.Angle = targetAngle;
-            Moving = false;
-            return isMoveSuccessfull;
-        }
-
-        bool Nothing(Report originalState, Nothing command)
-        {
-            return true;
         }
 
         public Report MakeMoves(Report originalState, List<LowLevelCommand> movesList)
         {
+            Moving = true;
             bool isSuccess = true;
             foreach (var move in movesList)
             {
                 var type = move.GetType().Name;
-                isSuccess = (bool)this
+                isSuccess = (bool)OurRobot
                     .GetType()
-                    .GetMethod(type, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                    .Invoke(this, new object[] { originalState, move });
+                    .GetMethod(type, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+                    .Invoke(OurRobot, new object[] { originalState, move, Objects });
                 if (!isSuccess)
                 {
                     OurRobot.Angle = originalState.AngleInRadians;
@@ -88,6 +42,7 @@ namespace StrategyVisualizer
                 }
             }
             var resultingState = new Report(OurRobot.Angle, OurRobot.Coords, isSuccess);
+            Moving = false;
             return resultingState;
         }
 

@@ -8,7 +8,7 @@ namespace StrategyBuilder
         class Vector
         {
             public double X, Y, Length;
-            public Vector(MyPoint begin, MyPoint end)
+            public Vector(PointD begin, PointD end)
             {
                 if (begin.Equals(end)) throw new ArgumentException();
                 X = end.X - begin.X;
@@ -16,9 +16,9 @@ namespace StrategyBuilder
                 Length = Math.Sqrt(X * X + Y * Y);
             }
         }
-        public static double CalculateAngle(MyPoint begin, MyPoint end)
+        public static double CalculateAngle(PointD begin, PointD end)
         {
-            var horizontal = new Vector(new MyPoint(0, 0), new MyPoint(1, 0));
+            var horizontal = new Vector(new PointD(0, 0), new PointD(1, 0));
             var current = new Vector(begin, end);
             if (current.X == 0)
             {
