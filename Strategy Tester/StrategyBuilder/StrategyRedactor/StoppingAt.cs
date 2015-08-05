@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 
 namespace StrategyBuilder
 {
@@ -13,13 +11,13 @@ namespace StrategyBuilder
         {
             AngleInRadians = angle;
             Coords = coords;
-            this.Next = null;
-            this.Previous = null;
-            this.Alternative = null;
+            Next = null;
+            Previous = null;
+            Alternative = null;
         }
         public override string ToString()
         {
-            return String.Format("StopAt({0}, {1}, {2})", Coords.X, Coords.Y, AngleInRadians);
+            return string.Format("StopAt({0}, {1}, {2})", Coords.X, Coords.Y, AngleInRadians);
         }
         public override List<LowLevelCommand> GetTranslation(ITranslator translator, Report current)
         {

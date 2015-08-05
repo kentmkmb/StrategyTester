@@ -8,8 +8,8 @@ namespace StrategyBuilder
 
         public Forward(double speed, double time)
         {
-            this.Speed = speed;
-            this.Time = time;
+            Speed = speed;
+            Time = time;
         }
     }
 }

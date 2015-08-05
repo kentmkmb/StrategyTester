@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 
 namespace StrategyBuilder
 {
@@ -10,13 +8,13 @@ namespace StrategyBuilder
         public MovementTo(PointD coords)
         {
             Coords = coords;
-            this.Next = null;
-            this.Previous = null;
-            this.Alternative = null;
+            Next = null;
+            Previous = null;
+            Alternative = null;
         }
         public override string ToString()
         {
-            return String.Format("MoveTo({0}, {1})", Coords.X, Coords.Y);
+            return string.Format("MoveTo({0}, {1})", Coords.X, Coords.Y);
         }
         public override List<LowLevelCommand> GetTranslation(ITranslator translator, Report current)
         {

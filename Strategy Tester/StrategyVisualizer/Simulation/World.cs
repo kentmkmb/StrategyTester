@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
-using System.Linq;
 using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
     class World
     {
-        const double angleDelta = Math.PI / 50;
-        const int coordsDelta = 4;
         public List<Polygon> Objects { get; private set; }
         public Robot OurRobot { get; private set; }
         public bool Moving { get; private set; }
@@ -32,7 +27,7 @@ namespace StrategyVisualizer
                 var type = move.GetType().Name;
                 isSuccess = (bool)OurRobot
                     .GetType()
-                    .GetMethod(type, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+                    .GetMethod(type, BindingFlags.Instance | BindingFlags.Public)
                     .Invoke(OurRobot, new object[] { originalState, move, Objects });
                 if (!isSuccess)
                 {
@@ -54,7 +49,7 @@ namespace StrategyVisualizer
 
         public Task<Report> TryMove(Report currentState, List<LowLevelCommand> movesList)
         {
-            var task = new Task<Report>(() => { return MakeMoves(currentState, movesList); });
+            var task = new Task<Report>(() => MakeMoves(currentState, movesList));
             task.Start();
             return task;
         }

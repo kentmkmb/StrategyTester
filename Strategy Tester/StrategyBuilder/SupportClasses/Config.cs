@@ -8,8 +8,8 @@ namespace StrategyBuilder
 
         public Config(double robotMaxLinearSpeed, double robotMaxAngleSpeed)
         {
-            this.RobotMaxLinearSpeed = robotMaxLinearSpeed;
-            this.RobotMaxAngleSpeed = robotMaxAngleSpeed;
+            RobotMaxLinearSpeed = robotMaxLinearSpeed;
+            RobotMaxAngleSpeed = robotMaxAngleSpeed;
         }
     }
 }

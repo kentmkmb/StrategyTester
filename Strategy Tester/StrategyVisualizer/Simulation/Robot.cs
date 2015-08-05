@@ -1,8 +1,8 @@
-﻿using StrategyBuilder;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Linq;
+using System.Threading;
+using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
@@ -23,7 +23,7 @@ namespace StrategyVisualizer
             var isMoveSuccessfull = true;
             var timeDelta = command.Time / 100;
             var targetCoords = new PointD(Coords.X + command.Time * command.Speed * Math.Cos(Angle),
-                                           Coords.Y + command.Time * command.Speed * Math.Sin(Angle));
+                                          Coords.Y + command.Time * command.Speed * Math.Sin(Angle));
             for (var i = 0.0; i < command.Time - timeDelta; i += timeDelta)
             {
                 Coords.X += timeDelta * command.Speed * Math.Cos(Angle);

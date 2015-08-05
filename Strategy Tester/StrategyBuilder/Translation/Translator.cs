@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace StrategyBuilder
 {
@@ -85,8 +84,7 @@ namespace StrategyBuilder
         }
         public List<LowLevelCommand> Translate(Report current, EndOfStrategy action)
         {
-            var result = new List<LowLevelCommand>();
-            result.Add(new Nothing());
+            var result = new List<LowLevelCommand> { new Nothing() };
             return result;
         }
     }

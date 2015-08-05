@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StrategyBuilder
+﻿namespace StrategyBuilder
 {
     public struct PointD
     {
@@ -20,7 +13,7 @@ namespace StrategyBuilder
 
         public override string ToString()
         {
-            return String.Format("Point({0}, {1})", X, Y);
+            return string.Format("Point({0}, {1})", X, Y);
         }
     }
 }

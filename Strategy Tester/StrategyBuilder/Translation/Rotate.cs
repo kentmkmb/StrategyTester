@@ -8,8 +8,8 @@ namespace StrategyBuilder
 
         public Rotate(double angleSpeed, double time)
         {
-            this.AngleSpeed = angleSpeed;
-            this.Time = time;
+            AngleSpeed = angleSpeed;
+            Time = time;
         }
     }
 }

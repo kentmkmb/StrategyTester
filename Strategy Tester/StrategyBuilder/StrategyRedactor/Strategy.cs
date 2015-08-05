@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace StrategyBuilder
 {
@@ -9,15 +8,15 @@ namespace StrategyBuilder
         public State First { get; set; }
         private State current;
         private State last;
-        private List<State> history;
-        private ITranslator translator;
+        private readonly List<State> history;
+        private readonly ITranslator translator;
 
         public Strategy(ITranslator translator)
         {
-            this.First = null;
-            this.current = null;
-            this.last = null;
-            this.history = new List<State>();
+            First = null;
+            current = null;
+            last = null;
+            history = new List<State>();
             this.translator = translator;
         }
         public Strategy() : this(null) { }
@@ -36,7 +35,7 @@ namespace StrategyBuilder
         }
         public Strategy Else(Strategy planB)
         {
-            State pointer = this.last;
+            var pointer = last;
             while (pointer == null)
             {
                 pointer.Alternative = planB;
@@ -59,9 +58,9 @@ namespace StrategyBuilder
             }
             else 
             {
-                this.last.Next = newItem;
-                newItem.Previous = this.last;
-                this.last = newItem;
+                last.Next = newItem;
+                newItem.Previous = last;
+                last = newItem;
             }
         }
 
@@ -76,23 +75,20 @@ namespace StrategyBuilder
                 current = current.Next;
                 return current.Previous;
             }
-            else
+            var pointer = current.Previous;
+            while (!(current is EndOfStrategy))
             {
-                State pointer = current.Previous;
-                while (!(current is EndOfStrategy))
+                if (pointer.Alternative == null) pointer = pointer.Next;
+                else
                 {
-                    if (pointer.Alternative == null) pointer = pointer.Next;
-                    else
-                    {
-                        return current = pointer.Alternative.First;
-                    }
+                    return current = pointer.Alternative.First;
                 }
-                return new EndOfStrategy();
-            }   
+            }
+            return new EndOfStrategy();
         }
         public Tuple<List<LowLevelCommand>, State> GetNextState(Report report)
         {
-            State decision = MakeDecision(report);
+            var decision = MakeDecision(report);
             history.Add(decision);
             var translation = decision.GetTranslation(translator, report);
             return new Tuple<List<LowLevelCommand>, State>(translation, decision);
@@ -100,7 +96,7 @@ namespace StrategyBuilder
 
         public void GoToPreviousState(int number)
         {
-            for (int i = 0; i < number; i++)
+            for (var i = 0; i < number; i++)
             {
                 if (history.Count == 0) return;
                 current = history[history.Count - 1];

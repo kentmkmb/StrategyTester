@@ -6,9 +6,9 @@ namespace StrategyBuilder
     {
         public EndOfStrategy()
         {
-            this.Next = null;
-            this.Previous = null;
-            this.Alternative = null;
+            Next = null;
+            Previous = null;
+            Alternative = null;
         }
         public override string ToString()
         {

@@ -13,7 +13,7 @@ namespace StrategyVisualizer
         public PointD To;
     }
 
-    public class Canvas : UserControl
+    public sealed class Canvas : UserControl
     {
         public Canvas()
         {
@@ -21,18 +21,18 @@ namespace StrategyVisualizer
         }
     }
 
-    public partial class StrategySimulator : Form
+    public sealed class StrategySimulator : Form
     {
-        ListView history;
-        IStrategy strategy;
+        readonly ListView history;
+        readonly IStrategy strategy;
         Report currentState;
         List<Move> moveHistory;
         List<Report> stateHistory;
-        World environment;
+        readonly World environment;
         bool mouseDown;
         Bitmap map;
-        SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
         GraphPanel graphPanel;
+        readonly SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
 
         public StrategySimulator(IStrategy strategy, PointD startingPoint)
         {
@@ -54,7 +54,7 @@ namespace StrategyVisualizer
             {
                 Width = 100,
                 Height = 30,
-                Text = "Load Map",
+                Text = @"Load Map",
                 Location = new Point(200, Height - 68)
             };
             var picturePanel = new Canvas
@@ -66,14 +66,14 @@ namespace StrategyVisualizer
             {
                 Width = 100,
                 Height = 30,
-                Text = "Next State",
+                Text = @"Next State",
                 Location = new Point(0, Height - 68)
             };
             var prevBut = new Button
             {
                 Width = 100,
                 Height = 30,
-                Text = "Previous State",
+                Text = @"Previous State",
                 Location = new Point(100, Height - 68)
             };
             history = new ListView
@@ -116,7 +116,7 @@ namespace StrategyVisualizer
             var fDialog = new OpenFileDialog();
             fDialog.Multiselect = false;
             fDialog.CheckFileExists = true;
-            fDialog.Filter = "Image Files(*.bmp; *.jpg; *.png)|*.bmp;*.jpg;*.png";
+            fDialog.Filter = @"Image Files(*.bmp; *.jpg; *.png)|*.bmp;*.jpg;*.png";
             fDialog.ShowDialog();
             if (fDialog.FileName == "") return;
             var img = Image.FromFile(fDialog.FileName);
@@ -160,7 +160,7 @@ namespace StrategyVisualizer
             graphics.TranslateTransform((float)-robot.Coords.X, (float)-robot.Coords.Y);
             graphics.DrawPolygon(
                 new Pen(Brushes.Red, 2),
-                new PointF[]
+                new[]
                 { 
                     new PointF((float)robot.Coords.X-5, (float)robot.Coords.Y+10),
                     new PointF((float)robot.Coords.X-5, (float)robot.Coords.Y-10),
