@@ -25,7 +25,7 @@ namespace StrategyVisualizer
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StrategySimulator(strategy, new PointD(20, 20)));
+            Application.Run(new SimulationForm(strategy, new PointD(20, 20)));
         }
     }
 }

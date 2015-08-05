@@ -7,44 +7,34 @@ using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
-    public class Move
+    public sealed partial class SimulationForm
     {
-        public PointD From;
-        public PointD To;
-    }
-
-    public sealed class Canvas : UserControl
-    {
-        public Canvas()
-        {
-            DoubleBuffered = true;
-        }
-    }
-
-    public sealed class StrategySimulator : Form
-    {
-        readonly ListView history;
+        private readonly ListView history;
         readonly IStrategy strategy;
-        Report currentState;
+        Report currentReport;
+        State currentState;
+        List<State> stateHistory;
         List<Move> moveHistory;
-        List<Report> stateHistory;
+        List<Report> reportHistory;
         readonly World environment;
         bool mouseDown;
         Bitmap map;
         GraphPanel graphPanel;
         readonly SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
 
-        public StrategySimulator(IStrategy strategy, PointD startingPoint)
+        public SimulationForm(IStrategy strategy, PointD startingPoint)
         {
             this.strategy = strategy;
             var startReport = new Report(0, startingPoint, true);
             environment = new World(startReport.Coords, startReport.AngleInRadians);
-            currentState = startReport;
+            currentReport = startReport;
             moveHistory = new List<Move>();
-            stateHistory = new List<Report> { startReport };
-            var startState = new Start(startingPoint);
-            startState.Next = strategy.First;
+            reportHistory = new List<Report> { startReport };
+            var startState = new Start(startingPoint) { Next = strategy.First };
+            currentState = startState;
+            stateHistory = new List<State> { startState };
             graphPanel = new GraphPanel(startState);
+            graphPanel.SelectNode(startState);
             Width = 800 + graphPanel.Width;
             Height = 600;
             graphPanel.Location = new Point(800, 0);
@@ -95,6 +85,7 @@ namespace StrategyVisualizer
             picturePanel.MouseMove += PicturePanel_MouseMove;
             picturePanel.MouseClick += picturePanel_MouseClick;
             history.ItemActivate += history_ItemActivate;
+            history.Items.Add(startState.ToString());
             Controls.Add(picturePanel);
             Controls.Add(history);
             Controls.Add(nextBut);
@@ -146,6 +137,7 @@ namespace StrategyVisualizer
 
         void picturePanel_Paint(object sender, PaintEventArgs e)
         {
+            graphPanel.Repaint();
             var graphics = e.Graphics;
             graphics.Clear(Color.Beige);
             if (map != null) graphics.DrawImage(map, new Point(0, 0));
@@ -177,44 +169,58 @@ namespace StrategyVisualizer
 
         void PrevBut_Click(object sender, EventArgs e)
         {
-            if (history.Items.Count == 0) return;
+            if (history.Items.Count == 1) return;
+            graphPanel.UnselectNode(currentState);
             history.Items.RemoveAt(history.Items.Count - 1);
             moveHistory.RemoveAt(moveHistory.Count - 1);
+            reportHistory.RemoveAt(reportHistory.Count - 1);
             stateHistory.RemoveAt(stateHistory.Count - 1);
             strategy.GoToPreviousState(1);
+            currentReport = reportHistory.Last();
             currentState = stateHistory.Last();
-            environment.SetState(stateHistory.Last());
+            environment.SetState(reportHistory.Last());
+            graphPanel.SelectNode(currentState);
         }
 
         async void NextBut_Click(object sender, EventArgs e)
         {
+            graphPanel.UnselectNode(currentState);
             if (environment.Moving) return;
-            var newAction = strategy.GetNextState(currentState);
+            var newAction = strategy.GetNextState(currentReport);
             var movesList = newAction.Item1;
             var actionName = newAction.Item2.ToString();
             history.Items.Add(actionName);
-            var newState = await environment.TryMove(currentState, movesList);
+            graphPanel.SelectEdge(currentState, newAction.Item2);
+            var newState = await environment.TryMove(currentReport, movesList);
+            graphPanel.UnselectEdge(currentState, newAction.Item2);
             if (newState.Success)
             {
-                var lastMove = new Move { From = currentState.Coords, To = newState.Coords };
+                var lastMove = new Move { From = currentReport.Coords, To = newState.Coords };
                 moveHistory.Add(lastMove);
-                stateHistory.Add(newState);
-                currentState = newState;
+                currentState = newAction.Item2;
+                stateHistory.Add(newAction.Item2);
+                reportHistory.Add(newState);
+                currentReport = newState;
             }
-            else currentState.Success = false;
+            else currentReport.Success = false;
+            graphPanel.SelectNode(currentState);
         }
 
         void history_ItemActivate(object sender, EventArgs e)
         {
+            graphPanel.UnselectNode(currentState);
             var selectedItemIndex = history.SelectedIndices[0];
             var stepsBack = history.Items.Count - selectedItemIndex - 1;
             for (var i = history.Items.Count - 1; i > selectedItemIndex; i--)
                 history.Items.RemoveAt(i);
-            moveHistory = moveHistory.Take(selectedItemIndex + 1).ToList();
+            moveHistory = moveHistory.Take(selectedItemIndex).ToList();
+            reportHistory = reportHistory.Take(selectedItemIndex + 1).ToList();
             stateHistory = stateHistory.Take(selectedItemIndex + 1).ToList();
             strategy.GoToPreviousState(stepsBack);
             currentState = stateHistory.Last();
-            environment.SetState(stateHistory.Last());
+            currentReport = reportHistory.Last();
+            environment.SetState(reportHistory.Last());
+            graphPanel.SelectNode(currentState);
         }
     }
 }
