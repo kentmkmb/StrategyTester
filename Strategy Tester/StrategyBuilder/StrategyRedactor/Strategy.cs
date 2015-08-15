@@ -36,7 +36,7 @@ namespace StrategyBuilder
         public Strategy Else(Strategy planB)
         {
             var pointer = last;
-            while (pointer == null)
+            while (pointer.Alternative == null)
             {
                 pointer.Alternative = planB;
                 if (pointer.Previous != null) pointer = pointer.Previous;
