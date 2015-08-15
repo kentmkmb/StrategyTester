@@ -89,7 +89,10 @@ namespace StrategyBuilder
         public Tuple<List<LowLevelCommand>, State> GetNextState(Report report)
         {
             var decision = MakeDecision(report);
-            history.Add(decision);
+            if ((history.Count == 0) || (!(history[history.Count - 1] is EndOfStrategy)))
+            {
+                history.Add(decision);
+            }
             var translation = decision.GetTranslation(translator, report);
             return new Tuple<List<LowLevelCommand>, State>(translation, decision);
         }
