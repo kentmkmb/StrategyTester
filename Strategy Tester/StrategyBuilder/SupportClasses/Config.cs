@@ -1,15 +1,10 @@
 ﻿
+using System;
 namespace StrategyBuilder
 {
-    public class Config
+    public static class Config
     {
-        public double RobotMaxLinearSpeed;
-        public double RobotMaxAngleSpeed;
-
-        public Config(double robotMaxLinearSpeed, double robotMaxAngleSpeed)
-        {
-            RobotMaxLinearSpeed = robotMaxLinearSpeed;
-            RobotMaxAngleSpeed = robotMaxAngleSpeed;
-        }
+        public static double RobotMaxLinearSpeed = 70;
+        public static double RobotMaxAngleSpeed = Math.PI / 2;
     }
 }

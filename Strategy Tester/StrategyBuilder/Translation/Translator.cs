@@ -33,20 +33,13 @@ namespace StrategyBuilder
             }
         }
 
-        public Translator(
-            double maxLinearSpeed, 
-            double maxAngleSpeed, 
-            double linearSpeedCoefficient = 1, 
-            double angleSpeedCoefficient = 1
-            )
+        public Translator()
         {
-            robotInfo.MaxLinearSpeed = maxLinearSpeed;
-            robotInfo.MaxAngleSpeed = maxAngleSpeed;
-            LinearSpeedСoefficient = linearSpeedCoefficient;
-            AngleSpeedСoefficient = angleSpeedCoefficient;
+            robotInfo.MaxLinearSpeed = Config.RobotMaxLinearSpeed;
+            robotInfo.MaxAngleSpeed = Config.RobotMaxAngleSpeed;
+            LinearSpeedСoefficient = 1;
+            AngleSpeedСoefficient = 1;
         }
-        public Translator(Config config) : this(config.RobotMaxLinearSpeed, config.RobotMaxAngleSpeed) { }
-
         private double CalculateAngleDelta(double currentAngle, double targetAngle)
         {
             var delta = targetAngle - currentAngle;
