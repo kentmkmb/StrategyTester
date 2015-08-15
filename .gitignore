@@ -45,3 +45,4 @@ Temporary Items
 /matrix/WindowsFormsApplication2/WindowsFormsApplication2/bin/
 obj/
 bin/
+*.suo
