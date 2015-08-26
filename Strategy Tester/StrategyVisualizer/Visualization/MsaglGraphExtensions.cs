@@ -10,6 +10,11 @@ namespace StrategyVisualizer
         {
             while (currentState.Next != null)
             {
+                if (graph.FindEdge(currentState, currentState.Next) != null)
+                {
+                    currentState = currentState.Next;
+                    continue;
+                }
                 graph.AddEdge(currentState.GetHashCode().ToString(), currentState.Next.GetHashCode().ToString());
                 var currentNode = graph.FindNode(currentState.GetHashCode().ToString());
                 currentNode.LabelText = currentState.ToString();

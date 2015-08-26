@@ -19,7 +19,7 @@ namespace StrategyVisualizer
         readonly World environment;
         bool mouseDown;
         Bitmap map;
-        GraphPanel graphPanel;
+        readonly GraphPanel graphPanel;
         readonly SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
 
         public SimulationForm(IStrategy strategy, PointD startingPoint)
@@ -169,6 +169,7 @@ namespace StrategyVisualizer
 
         void PrevBut_Click(object sender, EventArgs e)
         {
+            if (environment.Moving) return;
             if (history.Items.Count == 1) return;
             graphPanel.UnselectNode(currentState);
             history.Items.RemoveAt(history.Items.Count - 1);
@@ -184,9 +185,10 @@ namespace StrategyVisualizer
 
         async void NextBut_Click(object sender, EventArgs e)
         {
-            graphPanel.UnselectNode(currentState);
             if (environment.Moving) return;
             var newAction = strategy.GetNextState(currentReport);
+            if (currentState == newAction.Item2) return;
+            graphPanel.UnselectNode(currentState);
             var movesList = newAction.Item1;
             var actionName = newAction.Item2.ToString();
             history.Items.Add(actionName);
@@ -208,6 +210,7 @@ namespace StrategyVisualizer
 
         void history_ItemActivate(object sender, EventArgs e)
         {
+            if (environment.Moving) return;
             graphPanel.UnselectNode(currentState);
             var selectedItemIndex = history.SelectedIndices[0];
             var stepsBack = history.Items.Count - selectedItemIndex - 1;

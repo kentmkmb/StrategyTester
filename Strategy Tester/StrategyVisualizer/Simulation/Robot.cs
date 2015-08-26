@@ -23,11 +23,11 @@ namespace StrategyVisualizer
             var isMoveSuccessfull = true;
             var timeDelta = command.Time / 100;
             var targetCoords = new PointD(Coords.X + command.Time * command.Speed * Math.Cos(Angle),
-                                          Coords.Y + command.Time * command.Speed * Math.Sin(Angle));
+                                          Coords.Y + command.Time * command.Speed * -Math.Sin(Angle));
             for (var i = 0.0; i < command.Time - timeDelta; i += timeDelta)
             {
                 Coords.X += timeDelta * command.Speed * Math.Cos(Angle);
-                Coords.Y += timeDelta * command.Speed * Math.Sin(Angle);
+                Coords.Y += timeDelta * command.Speed * -Math.Sin(Angle);
                 if (obstacles.Any(x => x.IsPointIn(Coords)))
                 {
                     Angle = originalState.AngleInRadians;
