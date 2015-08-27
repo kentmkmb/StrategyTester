@@ -11,5 +11,10 @@ namespace StrategyBuilder
             Speed = speed;
             Time = time;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Forward({0}, {1})", Speed, Time);
+        }
     }
 }
