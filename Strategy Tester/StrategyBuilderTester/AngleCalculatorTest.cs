@@ -44,7 +44,8 @@ namespace StrategyBuilderTester
         {
             Assert.AreEqual(
                 Math.PI / 4,
-                AngleCaculator.CalculateAngle(new PointD(0, 0), new PointD(1, -1))
+                AngleCaculator.CalculateAngle(new PointD(0, 0), new PointD(1, -1)),
+                0.00000000000001
                 );
         }
         [TestMethod]
@@ -52,7 +53,8 @@ namespace StrategyBuilderTester
         {
             Assert.AreEqual(
                 Math.PI / 6,
-                AngleCaculator.CalculateAngle(new PointD(0, 0), new PointD(1, -1 / Math.Sqrt(3)))
+                AngleCaculator.CalculateAngle(new PointD(0, 0), new PointD(1, -1 / Math.Sqrt(3))),
+                0.00000000000001
                 );
         }
     }
