@@ -14,7 +14,7 @@ namespace StrategyVisualizer
                 .MoveTo(400, 400)
                 .StopAt(500, 500, 90)
                 .End();
-            var strategy = new Strategy(new Translator())
+            var strategy = new Strategy(new StrategyTesterTranslator())
                 .MoveTo(100, 100)
                 .MoveTo(200, 100)
                 .Else(planB)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StrategyBuilder;
+using StrategyBuilder.Translation;
 
 namespace StrategyVisualizer
 {

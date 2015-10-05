@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StrategyBuilder;
 
@@ -11,25 +12,26 @@ namespace StrategyVisualizer
     {
         private readonly ListView history;
         readonly IStrategy strategy;
-        Report currentReport;
+        StrategyTesterReport currentReport;
         State currentState;
         List<State> stateHistory;
         List<Move> moveHistory;
-        List<Report> reportHistory;
+        List<StrategyTesterReport> reportHistory;
         readonly World environment;
         bool mouseDown;
         Bitmap map;
+        readonly Canvas picturePanel;
         readonly GraphPanel graphPanel;
         readonly SolidBrush objectsColor = new SolidBrush(Color.FromArgb(100, 255, 50, 50));
 
         public SimulationForm(IStrategy strategy, PointD startingPoint)
         {
             this.strategy = strategy;
-            var startReport = new Report(0, startingPoint, true);
+            var startReport = new StrategyTesterReport(0, startingPoint, true);
             environment = new World(startReport.Coords, startReport.AngleInRadians);
             currentReport = startReport;
             moveHistory = new List<Move>();
-            reportHistory = new List<Report> { startReport };
+            reportHistory = new List<StrategyTesterReport> { startReport };
             var startState = new Start(startingPoint) { Next = strategy.First };
             currentState = startState;
             stateHistory = new List<State> { startState };
@@ -45,9 +47,9 @@ namespace StrategyVisualizer
                 Width = 100,
                 Height = 30,
                 Text = @"Load Map",
-                Location = new Point(200, Height - 68)
+                Location = new Point(400, Height - 68)
             };
-            var picturePanel = new Canvas
+            picturePanel = new Canvas
             {
                 Height = 530,
                 Width = Width - 150 - graphPanel.Width
@@ -59,12 +61,26 @@ namespace StrategyVisualizer
                 Text = @"Next State",
                 Location = new Point(0, Height - 68)
             };
+            var fastNextBut = new Button
+            {
+                Width = 100,
+                Height = 30,
+                Text = @"Next Fast",
+                Location = new Point(100, Height - 68)
+            };
+            var toEndBut = new Button
+            {
+                Width = 100,
+                Height = 30,
+                Text = @"To End Fast",
+                Location = new Point(300, Height - 68)
+            };
             var prevBut = new Button
             {
                 Width = 100,
                 Height = 30,
                 Text = @"Previous State",
-                Location = new Point(100, Height - 68)
+                Location = new Point(200, Height - 68)
             };
             history = new ListView
             {
@@ -78,8 +94,10 @@ namespace StrategyVisualizer
             sw.Tick += (sender, e) => picturePanel.Invalidate();
             loadMap.Click += loadMap_Click;
             picturePanel.Paint += picturePanel_Paint;
-            nextBut.Click += NextBut_Click;
+            nextBut.Click += (sender, args) => MakeMoves(false, true);
+            fastNextBut.Click += (sender, args) => MakeMoves(true, true);
             prevBut.Click += PrevBut_Click;
+            toEndBut.Click +=toEndBut_Click;
             picturePanel.MouseDown += PicturePanel_MouseDown;
             picturePanel.MouseUp += PicturePanel_MouseUp;
             picturePanel.MouseMove += PicturePanel_MouseMove;
@@ -89,10 +107,20 @@ namespace StrategyVisualizer
             Controls.Add(picturePanel);
             Controls.Add(history);
             Controls.Add(nextBut);
+            Controls.Add(fastNextBut);
+            Controls.Add(toEndBut);
             Controls.Add(prevBut);
             Controls.Add(loadMap);
             Controls.Add(graphPanel);
             sw.Start();
+        }
+
+        void toEndBut_Click(object sender, EventArgs e)
+        {
+            while (!(currentState is EndOfStrategy))
+            {
+                MakeMoves(true, false);
+            }
         }
 
         void picturePanel_MouseClick(object sender, MouseEventArgs e)
@@ -104,14 +132,16 @@ namespace StrategyVisualizer
 
         void loadMap_Click(object sender, EventArgs e)
         {
-            var fDialog = new OpenFileDialog();
-            fDialog.Multiselect = false;
-            fDialog.CheckFileExists = true;
-            fDialog.Filter = @"Image Files(*.bmp; *.jpg; *.png)|*.bmp;*.jpg;*.png";
+            var fDialog = new OpenFileDialog
+            {
+                Multiselect = false,
+                CheckFileExists = true,
+                Filter = @"Image Files(*.bmp; *.jpg; *.png)|*.bmp;*.jpg;*.png"
+            };
             fDialog.ShowDialog();
             if (fDialog.FileName == "") return;
             var img = Image.FromFile(fDialog.FileName);
-            map = new Bitmap(img, img.Width, img.Height);
+            map = new Bitmap(img, picturePanel.Width, picturePanel.Height);
         }
 
         void PicturePanel_MouseMove(object sender, MouseEventArgs e)
@@ -183,7 +213,7 @@ namespace StrategyVisualizer
             graphPanel.SelectNode(currentState);
         }
 
-        async void NextBut_Click(object sender, EventArgs e)
+        async void MakeMoves(bool doFast, bool async)
         {
             if (environment.Moving) return;
             var newAction = strategy.GetNextState(currentReport);
@@ -193,7 +223,13 @@ namespace StrategyVisualizer
             var actionName = newAction.Item2.ToString();
             history.Items.Add(actionName);
             graphPanel.SelectEdge(currentState, newAction.Item2);
-            var newState = await environment.TryMove(currentReport, movesList);
+            StrategyTesterReport newState;
+            if (async)
+            {
+                var task = Task<StrategyTesterReport>.Factory.StartNew(() => environment.TryMove(currentReport, movesList, doFast));
+                newState = await task;
+            }
+            else newState = environment.TryMove(currentReport, movesList, doFast);
             graphPanel.UnselectEdge(currentState, newAction.Item2);
             if (newState.Success)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using StrategyBuilder;
+using StrategyBuilder.Translation.StrategyTester;
 
 namespace StrategyVisualizer
 {
@@ -18,7 +19,7 @@ namespace StrategyVisualizer
             Angle = angle;
         }
 
-        public bool Forward(Report originalState, Forward command, List<Polygon> obstacles)
+        public bool Forward(StrategyTesterReport originalState, Forward command, List<Polygon> obstacles, bool doFast)
         {
             var isMoveSuccessfull = true;
             var timeDelta = command.Time / 100;
@@ -35,18 +36,18 @@ namespace StrategyVisualizer
                     isMoveSuccessfull = false;
                     break;
                 }
-                Thread.Sleep((int)(timeDelta * 1000));
+                if (!doFast) Thread.Sleep((int)(timeDelta * 1000));
             }
             if (isMoveSuccessfull) Coords = targetCoords;
             return isMoveSuccessfull;
         }
 
-        public bool Nothing(Report originalState, Nothing command, List<Polygon> obstacles)
+        public bool Nothing(StrategyTesterReport originalState, Nothing command, List<Polygon> obstacles, bool doFast)
         {
             return true;
         }
 
-        public bool Rotate(Report originalState, Rotate command, List<Polygon> obstacles)
+        public bool Rotate(StrategyTesterReport originalState, Rotate command, List<Polygon> obstacles, bool doFast)
         {
             bool isMoveSuccessfull = true;
             var targetAngle = Angle + command.AngleSpeed * command.Time;
@@ -61,7 +62,7 @@ namespace StrategyVisualizer
                     isMoveSuccessfull = false;
                     break;
                 }
-                Thread.Sleep((int)(timeDelta * 1000));
+                if (!doFast) Thread.Sleep((int)(timeDelta * 1000));
             }
             Angle = targetAngle;
             return isMoveSuccessfull;

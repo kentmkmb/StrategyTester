@@ -41,8 +41,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-/matrix/WindowsFormsApplication2/WindowsFormsApplication2/obj/
-/matrix/WindowsFormsApplication2/WindowsFormsApplication2/bin/
 obj/
 bin/
 *.suo

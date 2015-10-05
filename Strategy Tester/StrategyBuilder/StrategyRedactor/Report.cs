@@ -1,8 +1,14 @@
 ﻿using System;
+using RoboMovies;
 
 namespace StrategyBuilder
 {
-    public class Report
+    public abstract class Report
+    {
+        public bool Success;
+    }
+
+    public class StrategyTesterReport : Report
     {
         public PointD Coords;
         private double angleInRadians;
@@ -22,12 +28,22 @@ namespace StrategyBuilder
                 angleInRadians = value;
             }
         }
-        public bool Success;
 
-        public Report(double angle, PointD coords, bool success)
+        public StrategyTesterReport(double angle, PointD coords, bool success)
         {
             AngleInRadians = angle;
             Coords = coords;
+            Success = success;
+        }
+    }
+
+    public class CVARCReport : Report
+    {
+        public RMClient<RMClient<CommonSensorData>> Client;
+
+        public CVARCReport(RMClient<RMClient<CommonSensorData>> client, bool success)
+        {
+            Client = client;
             Success = success;
         }
     }

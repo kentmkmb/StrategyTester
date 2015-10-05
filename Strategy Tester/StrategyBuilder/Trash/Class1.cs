@@ -17,7 +17,7 @@
 //        Tuple<Report, string> Process(Report location);
 //    }
 
-//    public class Translator : IVisitor
+//    public class StrategyTesterTranslator : IVisitor
 //    {
 //        List<LowLevelCommand> list;
 //        Report location;

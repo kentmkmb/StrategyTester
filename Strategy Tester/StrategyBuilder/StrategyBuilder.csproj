@@ -51,16 +51,28 @@
     <Compile Include="SupportClasses\AngleCaculator.cs" />
     <Compile Include="SupportClasses\Config.cs" />
     <Compile Include="SupportClasses\PointD.cs" />
-    <Compile Include="Translation\Forward.cs" />
+    <Compile Include="Translation\CVARC\CVARCCommands.cs" />
+    <Compile Include="Translation\CVARC\CVARCTranslator.cs" />
+    <Compile Include="Translation\StrategyTester\StrategyTesterCommands.cs" />
     <Compile Include="Translation\LowLevelCommand.cs" />
-    <Compile Include="Translation\Nothing.cs" />
-    <Compile Include="Translation\Rotate.cs" />
-    <Compile Include="Translation\Translator.cs" />
+    <Compile Include="Translation\StrategyTester\StrategyTesterTranslator.cs" />
+    <Compile Include="Translation\Utils.cs" />
     <Compile Include="Trash\Builder.cs" />
     <Compile Include="Trash\Class1.cs" />
     <Compile Include="Trash\OldStrategy.cs" />
     <Compile Include="Trash\TranslatorToReport.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\uCvarc-master\CVARC.V2\Framework\CVARC.Core\CVARC.Core.csproj">
+      <Project>{f7b5021f-09e8-4388-97a2-4b44b9770d03}</Project>
+      <Name>CVARC.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\uCvarc-master\CVARC.V2\RoboMovies\RoboMovies\RoboMovies.General.csproj">
+      <Project>{4c00a5ba-5f04-4173-910d-e7813b313001}</Project>
+      <Name>RoboMovies.General</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

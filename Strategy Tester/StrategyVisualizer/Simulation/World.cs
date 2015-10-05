@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using StrategyBuilder;
+using StrategyBuilder.Translation;
 
 namespace StrategyVisualizer
 {
@@ -18,40 +18,31 @@ namespace StrategyVisualizer
             OurRobot = new Robot(robotCoords, robotAngle);
         }
 
-        public Report MakeMoves(Report originalState, List<LowLevelCommand> movesList)
+        public StrategyTesterReport TryMove(StrategyTesterReport originalState, List<LowLevelCommand> movesList, bool doFast)
         {
             Moving = true;
-            bool isSuccess = true;
+            var isSuccess = true;
             foreach (var move in movesList)
             {
                 var type = move.GetType().Name;
                 isSuccess = (bool)OurRobot
                     .GetType()
                     .GetMethod(type, BindingFlags.Instance | BindingFlags.Public)
-                    .Invoke(OurRobot, new object[] { originalState, move, Objects });
-                if (!isSuccess)
-                {
-                    OurRobot.Angle = originalState.AngleInRadians;
-                    OurRobot.Coords = originalState.Coords;
-                    break;
-                }
+                    .Invoke(OurRobot, new object[] { originalState, move, Objects, doFast });
+                if (isSuccess) continue;
+                OurRobot.Angle = originalState.AngleInRadians;
+                OurRobot.Coords = originalState.Coords;
+                break;
             }
-            var resultingState = new Report(OurRobot.Angle, OurRobot.Coords, isSuccess);
+            var resultingState = new StrategyTesterReport(OurRobot.Angle, OurRobot.Coords, isSuccess);
             Moving = false;
             return resultingState;
         }
 
-        public void SetState(Report state)
+        public void SetState(StrategyTesterReport state)
         {
             OurRobot.Angle = state.AngleInRadians;
             OurRobot.Coords = state.Coords;
-        }
-
-        public Task<Report> TryMove(Report currentState, List<LowLevelCommand> movesList)
-        {
-            var task = new Task<Report>(() => MakeMoves(currentState, movesList));
-            task.Start();
-            return task;
         }
     }
 }
