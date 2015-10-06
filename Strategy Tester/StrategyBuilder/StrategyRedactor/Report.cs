@@ -6,25 +6,21 @@ namespace StrategyBuilder
     public abstract class Report
     {
         public bool Success;
+        protected double angleInRadians;
     }
 
     public class StrategyTesterReport : Report
     {
         public PointD Coords;
-        private double angleInRadians;
         public double AngleInRadians
         {
             get { return angleInRadians; }
             set
             {
                 while (value < 0)
-                {
                     value += 2 * Math.PI;
-                }
                 while (value >= 2 * Math.PI)
-                {
                     value -= 2 * Math.PI;
-                }
                 angleInRadians = value;
             }
         }
@@ -39,11 +35,26 @@ namespace StrategyBuilder
 
     public class CVARCReport : Report
     {
-        public RMClient<RMClient<CommonSensorData>> Client;
-
-        public CVARCReport(RMClient<RMClient<CommonSensorData>> client, bool success)
+        public PointD Coords;
+        public Level2Client Client;
+        public double AngleInRadians
         {
+            get { return angleInRadians; }
+            set
+            {
+                while (value < 0)
+                    value += 2 * Math.PI;
+                while (value >= 2 * Math.PI)
+                    value -= 2 * Math.PI;
+                angleInRadians = value;
+            }
+        }
+
+        public CVARCReport(FullMapSensorData sensorsData, Level2Client client, bool success)
+        {
+            AngleInRadians = (sensorsData.SelfLocation.Angle / 180) * Math.PI;
             Client = client;
+            Coords = new PointD(sensorsData.SelfLocation.X, sensorsData.SelfLocation.Y);
             Success = success;
         }
     }

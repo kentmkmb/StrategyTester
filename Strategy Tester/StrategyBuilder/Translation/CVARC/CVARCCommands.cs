@@ -1,33 +1,61 @@
 ﻿using System;
 using RoboMovies;
-using StrategyBuilder.Translation;
 
 namespace StrategyBuilder.Translation.CVARC
 {
-    public class Move : LowLevelCommand
+    public abstract class CVARCLowLevelCommand : LowLevelCommand
     {
-        public double Speed;
-        public double Time;
+        public Func<FullMapSensorData> Action;
+    }
 
-        public Move(double speed, double time)
+    public class Forward : CVARCLowLevelCommand
+    {
+        private readonly double distance;
+
+        public Forward(double distance, Level2Client client)
         {
-            Speed = speed;
-            Time = time;
+            this.distance = distance;
+            Action = () => client.Move(distance);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Move({0})", distance);
         }
     }
 
-    public class Rotate : LowLevelCommand
+    public class Rotate : CVARCLowLevelCommand
     {
-        public Action Action;
+        private readonly double angle;
 
-        public Rotate(double angleSpeed, double time)
+        public Rotate(double angle, Level2Client client)
         {
+            this.angle = angle;
+            Action = () => client.Rotate(angle);
+        }
 
-            //Action = new Action((() => ));
+        public override string ToString()
+        {
+            return string.Format("Rotate({0})", angle);
         }
     }
 
-    public class Nothing : LowLevelCommand
+    public class Nothing : CVARCLowLevelCommand
     {
+
+        public Nothing(Level2Client client)
+        {
+            Action = () =>
+            {
+                client.Move(0);
+                client.Exit();
+                return null;
+            };
+        }
+
+        public override string ToString()
+        {
+            return "Nothing";
+        }
     }
 }

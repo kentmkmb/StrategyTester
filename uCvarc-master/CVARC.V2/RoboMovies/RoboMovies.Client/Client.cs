@@ -1,15 +1,9 @@
-﻿using AIRLab.Mathematics;
-using CVARC.V2;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
+﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CVARC.V2;
 using RoboMovies;
+using StrategyBuilder;
 using StrategyBuilder.Translation.CVARC;
 
 namespace ClientExample
@@ -20,47 +14,48 @@ namespace ClientExample
         static void PrintLocation(CommonSensorData sensors)
         {
             var location = sensors.SelfLocation;
-            Console.WriteLine("{0} {1}", location.X, location.Y);
+            Console.WriteLine(@"{0} {1}", location.X, location.Y);
         }
 
         static ClientForm form;
 
-        static void Control(int port)
+        static void Control(int port, Strategy strategy)
         {
             var client = new Level2Client();
 			client.SensorDataReceived += sensorData => form.ShowMap(sensorData.Map);
-			client.Configurate(port, true, RoboMoviesBots.Stand);
-            
-			client.Rotate(-90);
-            client.Move(100);
-            client.Rotate(90);
-            client.Move(110);
-            for (int i = 0; i < 10; i++)
+			var startInfo = client.Configurate(port, true, RoboMoviesBots.Stand);
+            var currentReport = new CVARCReport(startInfo, client, true);
+            PrintLocation(startInfo);
+            while (true)
             {
-                client.Rotate(10);
+                var newAction = strategy.GetNextState(currentReport);
+                foreach (var command in newAction.Item1)
+                {
+                    var cvarccommand = command as CVARCLowLevelCommand;
+                    var newState = cvarccommand.Action();
+                    if (cvarccommand is Nothing)
+                        return;
+                    currentReport = new CVARCReport(newState, client, true);
+                }
             }
-            client.Exit();
         }
 
         static void Run(int port)
         {
-            var strategy = new StrategyBuilder.Strategy(new CVARCTranslator());
+            var strategy = new Strategy(new CVARCTranslator()).MoveTo(-60, 0).End();
             form = new ClientForm();
 			new Thread(
 				() =>
 				{
-					Control(port);
-					return;
+					Control(port, strategy);
 				}).Start();
             Application.Run(form);
         }
-
 		
         [STAThread]
         public static void Main(string[] args)
         {
-            CVARC.V2.CVARCProgram.RunServerInTheSameThread(Run);
+            CVARCProgram.RunServerInTheSameThread(Run);
         }
-
     }
 }

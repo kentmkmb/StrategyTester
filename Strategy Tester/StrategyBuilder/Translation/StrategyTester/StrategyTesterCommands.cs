@@ -1,4 +1,6 @@
-﻿namespace StrategyBuilder.Translation.StrategyTester
+﻿using RoboMovies;
+
+namespace StrategyBuilder.Translation.StrategyTester
 {
     public class Forward : LowLevelCommand
     {
