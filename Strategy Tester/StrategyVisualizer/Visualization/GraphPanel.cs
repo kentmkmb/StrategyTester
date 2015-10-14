@@ -10,6 +10,7 @@ namespace StrategyVisualizer
         public readonly Graph Graph;
         private readonly GViewer viewer;
         private readonly Color selectColor = Color.Yellow;
+        private Color memoryColor;
 
         public GraphPanel(State start)
         {
@@ -45,13 +46,14 @@ namespace StrategyVisualizer
         public void SelectEdge(State from, State to)
         {
             var edge = Graph.FindEdge(from, to);
+            memoryColor = edge.Attr.Color;
             edge.Attr.Color = selectColor;
         }
 
         public void UnselectEdge(State from, State to)
         {
             var edge = Graph.FindEdge(from, to);
-            edge.Attr.Color = Color.Black;
+            edge.Attr.Color = memoryColor;
         }
     }
 }

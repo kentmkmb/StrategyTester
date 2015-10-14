@@ -20,31 +20,36 @@ namespace StrategyBuilder
             history = new List<State>();
             this.translator = translator;
         }
+
         public Strategy() : this(null) { }
 
         public Strategy StopAt(int x, int y, double angle)
         {
-            var newItem = new StoppingAt(angle, new PointD(x, y));
+            var newItem = new StoppingAt(new PointD(x, y), (angle/180)*Math.PI);
             Connect(newItem);
             return this;
         }
+
         public Strategy MoveTo(int x, int y)
         {
             var newItem = new MovementTo(new PointD(x, y));
             Connect(newItem);
             return this;
         }
+
         public Strategy Else(Strategy planB)
         {
             var pointer = last;
             while (pointer.Alternative == null)
             {
                 pointer.Alternative = planB;
+                planB.First.Previous = pointer;
                 if (pointer.Previous != null) pointer = pointer.Previous;
                 else break;
             }
             return this;
         }
+
         public Strategy End()
         {
             Connect(new EndOfStrategy());
@@ -70,30 +75,26 @@ namespace StrategyBuilder
             if (report.Success)
             {
                 if (current is EndOfStrategy)
-                {
                     return current;
-                }
                 current = current.Next;
                 return current.Previous;
             }
             var pointer = current.Previous;
             while (!(current is EndOfStrategy))
-            {
                 if (pointer.Alternative == null) pointer = pointer.Next;
                 else
                 {
-                    return current = pointer.Alternative.First;
+                    current = pointer.Alternative.First.Next;
+                    return current.Previous;
                 }
-            }
             return new EndOfStrategy();
         }
+
         public Tuple<List<LowLevelCommand>, State> GetNextState(Report report)
         {
             var decision = MakeDecision(report);
             if ((history.Count == 0) || (!(history[history.Count - 1] is EndOfStrategy)))
-            {
                 history.Add(decision);
-            }
             var translation = decision.GetTranslation(translator, report);
             return new Tuple<List<LowLevelCommand>, State>(translation, decision);
         }

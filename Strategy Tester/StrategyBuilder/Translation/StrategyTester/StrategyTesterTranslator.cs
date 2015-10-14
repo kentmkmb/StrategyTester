@@ -42,12 +42,14 @@ namespace StrategyBuilder
             LinearSpeedСoefficient = 1;
             AngleSpeedСoefficient = 1;
         }
-        private double CalculateAngleDelta(double currentAngle, double targetAngle)
+
+        private static double CalculateAngleDelta(double currentAngle, double targetAngle)
         {
             var delta = targetAngle - currentAngle;
             if (Math.Abs(delta) < Math.PI) return delta;
-            else return -Math.Sign(delta) * (2 * Math.PI - Math.Abs(delta));
+            return -Math.Sign(delta) * (2 * Math.PI - Math.Abs(delta));
         }
+
         private Rotate MakeRotate(double currentAngle, double targetAngle)
         {
             if (Math.Abs(currentAngle - targetAngle) < 0.00001) throw new ArgumentException();
@@ -55,12 +57,14 @@ namespace StrategyBuilder
             var delta = CalculateAngleDelta(currentAngle, targetAngle);
             return new Rotate(Math.Sign(delta) * speed, Math.Abs(delta) / speed);
         }
+
         private Forward MakeForward(PointD current, PointD target)
         {
             var speed = LinearSpeedСoefficient * robotInfo.MaxLinearSpeed;
             var length = Math.Sqrt(Math.Pow(target.X - current.X, 2) + Math.Pow(target.Y - current.Y, 2));
             return new Forward(speed, length / speed);
         }
+
         public List<LowLevelCommand> Translate(Report current, MovementTo action)
         {
             var report = current as StrategyTesterReport;
@@ -73,6 +77,7 @@ namespace StrategyBuilder
             result.Add(MakeForward(report.Coords, action.Coords));
             return result;
         }
+
         public List<LowLevelCommand> Translate(Report current, StoppingAt action)
         {
             var report = current as StrategyTesterReport;
@@ -83,6 +88,7 @@ namespace StrategyBuilder
             result.Add(MakeRotate(targetAngle, action.AngleInRadians));
             return result;
         }
+
         public List<LowLevelCommand> Translate(Report current, EndOfStrategy action)
         {
             var result = new List<LowLevelCommand> { new Nothing() };

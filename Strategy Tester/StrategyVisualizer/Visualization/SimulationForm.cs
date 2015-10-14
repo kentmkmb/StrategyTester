@@ -233,14 +233,19 @@ namespace StrategyVisualizer
             graphPanel.UnselectEdge(currentState, newAction.Item2);
             if (newState.Success)
             {
-                var lastMove = new Move { From = currentReport.Coords, To = newState.Coords };
+                var lastMove = new Move {From = currentReport.Coords, To = newState.Coords};
                 moveHistory.Add(lastMove);
                 currentState = newAction.Item2;
                 stateHistory.Add(newAction.Item2);
                 reportHistory.Add(newState);
                 currentReport = newState;
             }
-            else currentReport.Success = false;
+            else
+            {
+                history.Items.RemoveAt(history.Items.Count - 1);
+                currentReport.Success = false;
+                strategy.GoToPreviousState(1);
+            }
             graphPanel.SelectNode(currentState);
         }
 

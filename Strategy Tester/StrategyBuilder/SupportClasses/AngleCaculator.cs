@@ -6,7 +6,9 @@ namespace StrategyBuilder
     {
         class Vector
         {
-            public double X, Y, Length;
+            public readonly double X;
+            public readonly double Y;
+            public readonly double Length;
             public Vector(PointD begin, PointD end)
             {
                 if (begin.Equals(end)) throw new ArgumentException();

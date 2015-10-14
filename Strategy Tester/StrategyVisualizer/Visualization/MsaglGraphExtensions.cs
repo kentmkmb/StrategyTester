@@ -15,16 +15,18 @@ namespace StrategyVisualizer
                     currentState = currentState.Next;
                     continue;
                 }
-                graph.AddEdge(currentState.GetHashCode().ToString(), currentState.Next.GetHashCode().ToString());
+                var edge = graph.AddEdge(currentState.GetHashCode().ToString(), currentState.Next.GetHashCode().ToString());
+                edge.Attr.LineWidth = 2;
                 var currentNode = graph.FindNode(currentState.GetHashCode().ToString());
                 currentNode.LabelText = currentState.ToString();
                 if (currentState.Alternative != null)
                 {
-                    graph.AddEdge(currentState.GetHashCode().ToString(), currentState.Alternative.First.GetHashCode().ToString());
+                    var altEdge = graph.AddEdge(currentState.GetHashCode().ToString(), currentState.Alternative.First.GetHashCode().ToString());
+                    altEdge.Attr.Color = Color.Gray;
+                    altEdge.Attr.LineWidth = 2;
                     graph.AddNodes(currentState.Alternative.First);
-                    currentNode.Attr.Shape = Shape.Diamond;
                 }
-                else currentNode.Attr.Shape = Shape.Box;
+                currentNode.Attr.Shape = Shape.Box;
                 currentState = currentState.Next;
             }
             var lastNode = graph.FindNode(currentState.GetHashCode().ToString());
