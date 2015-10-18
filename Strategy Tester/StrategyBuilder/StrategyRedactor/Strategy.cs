@@ -79,6 +79,7 @@ namespace StrategyBuilder
                 current = current.Next;
                 return current.Previous;
             }
+            GoToPreviousState(1);
             var pointer = current.Previous;
             while (!(current is EndOfStrategy))
                 if (pointer.Alternative == null) pointer = pointer.Next;

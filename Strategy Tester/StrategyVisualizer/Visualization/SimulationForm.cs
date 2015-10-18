@@ -37,9 +37,9 @@ namespace StrategyVisualizer
             stateHistory = new List<State> { startState };
             graphPanel = new GraphPanel(startState);
             graphPanel.SelectNode(startState);
-            Width = 800 + graphPanel.Width;
-            Height = 600;
-            graphPanel.Location = new Point(800, 0);
+            Width = Config.FieldWidth + graphPanel.Width + 150;
+            Height = Config.FieldHeight+68;
+            graphPanel.Location = new Point(Config.FieldWidth + 150, 0);
             DoubleBuffered = true;
             var sw = new Timer();
             var loadMap = new Button
@@ -51,8 +51,8 @@ namespace StrategyVisualizer
             };
             picturePanel = new Canvas
             {
-                Height = 530,
-                Width = Width - 150 - graphPanel.Width
+                Height = this.Height - 68,
+                Width = this.Width - 150 - graphPanel.Width
             };
             var nextBut = new Button
             {
@@ -84,7 +84,7 @@ namespace StrategyVisualizer
             };
             history = new ListView
             {
-                Height = 560,
+                Height = this.Height - 40,
                 Width = 150,
                 Location = new Point(Width - 150 - graphPanel.Width, 0),
                 View = View.List,
@@ -118,9 +118,7 @@ namespace StrategyVisualizer
         void toEndBut_Click(object sender, EventArgs e)
         {
             while (!(currentState is EndOfStrategy))
-            {
                 MakeMoves(true, false);
-            }
         }
 
         void picturePanel_MouseClick(object sender, MouseEventArgs e)
@@ -171,6 +169,18 @@ namespace StrategyVisualizer
             var graphics = e.Graphics;
             graphics.Clear(Color.Beige);
             if (map != null) graphics.DrawImage(map, new Point(0, 0));
+            for (var i = 0; i < picturePanel.Width; i += Config.GridSize)
+            {
+                graphics.DrawLine(new Pen(Brushes.Gray, 1), i, 0, i, picturePanel.Height);
+                if (Config.AddNumbersToGrid)
+                    graphics.DrawString(i.ToString(), new Font("arial", 8), Brushes.Black, new PointF(i, 0));
+            }
+            for (var i = 0; i < picturePanel.Height; i += Config.GridSize)
+            {
+                graphics.DrawLine(new Pen(Brushes.Gray, 1), 0, i, picturePanel.Width, i);
+                if (Config.AddNumbersToGrid)
+                    graphics.DrawString(i.ToString(), new Font("arial", 8), Brushes.Black, new PointF(0, i));
+            } 
             foreach (var move in moveHistory)
             {
                 graphics.DrawLine(new Pen(Brushes.Red, 5), (float)move.From.X, (float)move.From.Y, (float)move.To.X, (float)move.To.Y);
@@ -244,7 +254,6 @@ namespace StrategyVisualizer
             {
                 history.Items.RemoveAt(history.Items.Count - 1);
                 currentReport.Success = false;
-                strategy.GoToPreviousState(1);
             }
             graphPanel.SelectNode(currentState);
         }

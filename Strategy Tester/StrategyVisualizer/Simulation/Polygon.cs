@@ -3,7 +3,7 @@ using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
-    class Polygon
+    public class Polygon
     {
         public Point Coords;
         public Size Size;

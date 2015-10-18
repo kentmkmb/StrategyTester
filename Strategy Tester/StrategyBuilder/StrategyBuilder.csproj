@@ -56,10 +56,6 @@
     <Compile Include="Translation\StrategyTester\StrategyTesterCommands.cs" />
     <Compile Include="Translation\LowLevelCommand.cs" />
     <Compile Include="Translation\StrategyTester\StrategyTesterTranslator.cs" />
-    <Compile Include="Trash\Builder.cs" />
-    <Compile Include="Trash\Class1.cs" />
-    <Compile Include="Trash\OldStrategy.cs" />
-    <Compile Include="Trash\TranslatorToReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\uCvarc-master\CVARC.V2\Framework\CVARC.Core\CVARC.Core.csproj">

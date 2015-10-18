@@ -43,4 +43,5 @@ Temporary Items
 .apdisk
 obj/
 bin/
+TestResults/
 *.suo

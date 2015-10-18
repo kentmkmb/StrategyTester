@@ -5,7 +5,7 @@ using StrategyBuilder.Translation;
 
 namespace StrategyVisualizer
 {
-    class World
+    public class World
     {
         public List<Polygon> Objects { get; private set; }
         public Robot OurRobot { get; private set; }

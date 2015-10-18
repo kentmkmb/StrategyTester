@@ -4,6 +4,14 @@ using StrategyBuilder;
 
 namespace StrategyVisualizer
 {
+    public static class Config
+    {
+        public const int FieldWidth = 800;
+        public const int FieldHeight = 600;
+        public const int GridSize = 25;
+        public const bool AddNumbersToGrid = true;
+    }
+
     static class Program
     {
         [STAThread]

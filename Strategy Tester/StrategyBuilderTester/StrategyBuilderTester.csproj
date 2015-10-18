@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -52,11 +53,16 @@
   <ItemGroup>
     <Compile Include="AngleCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StrategyTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StrategyBuilder\StrategyBuilder.csproj">
       <Project>{9a29b69a-4c80-468e-9bc2-6e0d0be38d40}</Project>
       <Name>StrategyBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StrategyVisualizer\StrategyVisualizer.csproj">
+      <Project>{33d2f5f0-771a-4907-99ac-b91e5d66ea7f}</Project>
+      <Name>StrategyVisualizer</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

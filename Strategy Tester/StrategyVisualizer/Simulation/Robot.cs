@@ -7,7 +7,7 @@ using StrategyBuilder.Translation.StrategyTester;
 
 namespace StrategyVisualizer
 {
-    class Robot
+    public class Robot
     {
         public PointD Coords;
         public double Angle;
