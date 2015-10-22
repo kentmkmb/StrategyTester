@@ -50,6 +50,7 @@
     <Compile Include="StrategyRedactor\Strategy.cs" />
     <Compile Include="SupportClasses\AngleCaculator.cs" />
     <Compile Include="SupportClasses\Config.cs" />
+    <Compile Include="SupportClasses\CVARCAngleCalculator.cs" />
     <Compile Include="SupportClasses\PointD.cs" />
     <Compile Include="Translation\CVARC\CVARCCommands.cs" />
     <Compile Include="Translation\CVARC\CVARCTranslator.cs" />

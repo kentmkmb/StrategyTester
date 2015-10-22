@@ -11,7 +11,6 @@ namespace StrategyBuilder
             public readonly double Length;
             public Vector(PointD begin, PointD end)
             {
-                if (begin.Equals(end)) throw new ArgumentException();
                 X = end.X - begin.X;
                 Y = end.Y - begin.Y;
                 Length = Math.Sqrt(X * X + Y * Y);

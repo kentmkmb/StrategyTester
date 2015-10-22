@@ -18,6 +18,12 @@ namespace StrategyBuilder
             return string.Format("Point({0}, {1})", X, Y);
         }
 
+        public static PointD operator -(PointD objTwo, object objOne)
+        {
+            var pointOne = (PointD)objOne;
+            return new PointD(objTwo.X - pointOne.X, objTwo.Y - pointOne.Y);
+        }
+
         public override bool Equals(object obj)
         {
             var p = (PointD)obj;

@@ -19,7 +19,7 @@ namespace ClientExample
 
         static ClientForm form;
 
-        static void Control(int port, Strategy strategy)
+        static void Control(int port, IStrategy strategy)
         {
             var client = new Level2Client();
 			client.SensorDataReceived += sensorData => form.ShowMap(sensorData.Map);
@@ -42,7 +42,7 @@ namespace ClientExample
 
         static void Run(int port)
         {
-            var strategy = new Strategy(new CVARCTranslator()).MoveTo(-60, 0).End();
+            var strategy = new Strategy(new CVARCTranslator()).MoveTo(-60, -55).End();
             form = new ClientForm();
 			new Thread(
 				() =>
